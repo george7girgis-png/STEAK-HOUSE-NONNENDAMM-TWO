@@ -1,0 +1,210 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactList from '../components/ContactList.astro';
+import ReservationForm from '../components/ReservationForm.astro';
+import MapConsent from '../components/MapConsent.astro';
+import Icon from '../components/Icon.astro';
+import { restaurant, dishes, highlights, catering, press, pressArchiveNote, journeyMedia } from '../content/site.js';
+
+const scenes = [
+  { key: 'hero', poster: journeyMedia.hero.poster },
+  ...journeyMedia.chapters.map((c) => ({ key: c.ambient, poster: c.poster })),
+];
+const transitions = journeyMedia.chapters.map((c) => c.transition);
+const cateringMail = `mailto:${restaurant.email}?subject=${encodeURIComponent('Anfrage Buffet & Catering')}`;
+---
+<Base
+  title="Steakhaus Nonnendamm | Argentinisches Steakhaus in Berlin-Siemensstadt seit 1982"
+  description="Argentinisches Steakhaus in Berlin-Siemensstadt: Steaks vom Holzkohlegrill, erlesene Weine und knackige Salate. Tradition seit 1982. Buffet & Catering für bis zu 120 Personen."
+  path="/"
+  cinematic
+>
+  <section class="journey" id="start" aria-label="Unsere Gerichte: eine Reise durch das Feuer" data-journey>
+    <div class="journey__stage" data-stage>
+      <div class="journey__media" aria-hidden="true">
+        <div class="journey__cam" data-cam>
+          <div class="scene scene--hospitality" data-hospitality>
+            <img src="/img/gastraum.jpg" alt="" loading="lazy" />
+          </div>
+          {scenes.map((s, i) => (
+            <div class={`scene${i === 0 ? ' is-on' : ''}`} data-scene={s.key}>
+              <img src={`/media/poster/${s.poster}-desktop.jpg`} data-poster={s.poster} alt="" fetchpriority={i === 0 ? 'high' : undefined} loading={i === 0 ? 'eager' : 'lazy'} />
+              <video muted playsinline loop preload="none" disablepictureinpicture data-ambient={s.key}></video>
+            </div>
+          ))}
+          {transitions.map((t) => (
+            <div class="scene scene--transition" data-transition-scene={t}>
+              <video muted playsinline preload="none" disablepictureinpicture data-transition={t}></video>
+            </div>
+          ))}
+        </div>
+        <canvas class="journey__fx" data-fx></canvas>
+        <div class="journey__shade" data-shade></div>
+        <div class="journey__intro-dark" data-intro-dark></div>
+      </div>
+
+      <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="false">
+        <svg viewBox="0 0 12 12" aria-hidden="true" data-icon-pause><rect x="2" y="1.5" width="2.6" height="9" fill="currentColor"/><rect x="7.4" y="1.5" width="2.6" height="9" fill="currentColor"/></svg>
+        <svg viewBox="0 0 12 12" aria-hidden="true" data-icon-play hidden><path d="M3 1.5v9l7.5-4.5z" fill="currentColor"/></svg>
+        <span data-motion-label>Bewegung pausieren</span>
+      </button>
+
+      <div class="journey__chapters" data-chapters>
+      <article class="journey__chapter journey__chapter--hero" data-chapter="start" id="start-kapitel" aria-labelledby="hero-title">
+        <div class="static-media"><img src="/media/poster/hero-desktop.jpg" alt="" /></div>
+        <div class="container">
+          <div class="panel hero-panel" data-panel="start">
+            <img class="hero-logo" src="/brand/logo-steakhaus-nonnendamm.png" alt="Logo Steakhaus Nonnendamm, Est. 1982" width="168" height="163" data-hero-logo />
+            <span class="eyebrow hero-kicker" data-hero-line>Argentinisches Steakhaus · Holzkohlegrill · Seit {restaurant.founded}</span>
+            <h1 class="display" id="hero-title" data-hero-line>Feuer. Rauch.<br />Leidenschaft.</h1>
+            <p class="hero-sub" data-hero-line>Steaks vom Holzkohlegrill, erlesene Weine und knackige Salate in Berlin-Siemensstadt. Tradition seit {restaurant.founded}.</p>
+            <div class="hero-actions" data-hero-line>
+              <a class="btn btn--solid" href="#reservierung">Jetzt reservieren <span class="arrow" aria-hidden="true"></span></a>
+              <a class="btn" href="#gerichte">Scrollen und entdecken</a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <span id="gerichte" class="journey__marker" data-anchor="gerichte"></span>
+      {dishes.map((d) => (
+        <article class="journey__chapter" data-chapter={d.id} data-side={d.side} id={d.id} aria-labelledby={`${d.id}-title`}>
+          <div class="static-media"><img src={`/media/poster/${d.id}-desktop.jpg`} alt={d.alt} loading="lazy" /></div>
+          <div class="container">
+            <div class="panel" data-panel={d.id}>
+              <span class="chapter-no">{d.number}</span>
+              <h2 class="dish-name" id={`${d.id}-title`}>{d.name}</h2>
+              <p class="dish-facts"><span>{d.weight}</span><span class="sep" aria-hidden="true"></span><span class="dish-price">{d.price}</span></p>
+              <p class="dish-desc">{d.description}</p>
+              <a class="btn" href="#reservierung">Tisch reservieren <span class="arrow" aria-hidden="true"></span></a>
+              <p class="media-note" style="margin-top:18px">Abbildung: KI-generierte Illustration, Anrichtung kann abweichen.</p>
+            </div>
+          </div>
+        </article>
+      ))}
+
+      <article class="journey__chapter journey__chapter--outro" data-chapter="outro" aria-labelledby="outro-title">
+        <div class="container" style="text-align:center">
+          <div class="panel" data-panel="outro" style="grid-column:1/-1">
+            <span class="eyebrow">Willkommen</span>
+            <h2 class="h2" id="outro-title" style="margin-top:14px">Argentinische Grillkultur.<br />Berliner Gastfreundschaft.</h2>
+          </div>
+        </div>
+      </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section intro-band ember-floor" aria-labelledby="intro-title">
+    <div class="container">
+      <span class="eyebrow">Argentinisches Steakhaus Nonnendamm</span>
+      <h2 class="h2" id="intro-title" style="margin-top:14px">Steaks vom Holzkohlegrill.<br />Tradition seit {restaurant.founded}.</h2>
+      <p class="lead">Genießen Sie exquisite Steaks, frisch vom Holzkohlegrill, begleitet von erlesenen Weinen und knackigen Salaten. Erleben Sie in unserem gemütlichen Ambiente authentische Grillkultur und Tradition seit {restaurant.founded}.</p>
+      <ul class="highlights">
+        {highlights.map((h) => <li><h3>{h.title}</h3><p>{h.text}</p></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="ueber-uns" aria-labelledby="history-title">
+    <div class="container">
+      <div class="history">
+        <figure class="history__img" style="margin:0">
+          <img src="/img/gastraum.jpg" alt="Gastraum des Steakhaus Nonnendamm mit Holzbalken, Wagenrad und Salatbar" loading="lazy" width="1366" height="786" />
+        </figure>
+        <div class="history__panel">
+          <span class="eyebrow">Seit {restaurant.founded}</span>
+          <h2 class="h2" id="history-title">Die Geschichte des Steakhauses</h2>
+          <p>Das Steakhaus Nonnendamm verbindet argentinische Grillkultur mit deutscher Gastfreundschaft. Seit {restaurant.founded} bedienen wir unsere Gäste mit Leidenschaft und Hingabe, um ein unvergessliches Geschmackserlebnis zu bieten.</p>
+          <p>Bei uns finden Sie Steaks, zubereitet auf traditionelle Weise und serviert in einem einladenden Ambiente.</p>
+          <a class="btn" href="/ueber-uns/">Mehr über uns <span class="arrow" aria-hidden="true"></span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="catering" aria-labelledby="catering-title">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Für jeden Anlass</span>
+        <h2 class="h2" id="catering-title">Buffet &amp; Catering</h2>
+        <span class="rule rule--short"></span>
+      </div>
+      <div class="catering__cols">
+        <div>
+          <h3>Ihr Anlass, Ihr Menü</h3>
+          <p>{catering.intro}</p>
+          <p>{catering.kitchen}</p>
+          <ul class="tick-list">{catering.occasions.map((o) => <li>{o}</li>)}</ul>
+        </div>
+        <figure class="catering__img">
+          <img src="/img/buffet.jpg" alt="Buffet mit Salaten und Speisen in Wärmebehältern" loading="lazy" width="514" height="694" />
+        </figure>
+        <div>
+          <h3>Unsere Leistungen</h3>
+          <ul class="tick-list">{catering.services.map((s) => <li>{s}</li>)}</ul>
+          <p>{catering.closing}</p>
+        </div>
+      </div>
+      <div class="catering__actions">
+        <a class="btn btn--solid" href={cateringMail}>Catering anfragen <span class="arrow" aria-hidden="true"></span></a>
+        <a class="btn" href={restaurant.phoneHref}>Anrufen: {restaurant.phoneDisplay}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="presse" aria-labelledby="press-title">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Aus dem Archiv</span>
+        <h2 class="h2" id="press-title">Presse</h2>
+        <span class="rule rule--short"></span>
+      </div>
+      <div class="press-grid">
+        {press.map((p) => (
+          <article class="press-card" aria-labelledby={`card-${p.id}`}>
+            <figure class="press-card__img"><img src={p.image} alt="" loading="lazy" width="640" height="717" /></figure>
+            <div class="press-card__body">
+              <h3 id={`card-${p.id}`} class="press-card__source">{p.source}<span>{p.year}</span></h3>
+              <p class="press-card__title">„{p.title}“</p>
+              <a class="press-card__link" href={`/presse/#${p.id}`}><span class="visually-hidden">Archiveintrag {p.source} {p.year} lesen</span><span aria-hidden="true" class="arrow"></span></a>
+            </div>
+          </article>
+        ))}
+      </div>
+      <p class="archive-note">{pressArchiveNote} Abbildungen: Symbolbilder, keine Originalseiten.</p>
+    </div>
+  </section>
+
+  <section class="section" id="reservierung" aria-labelledby="reserve-title">
+    <div class="container reserve">
+      <div class="reserve__intro">
+        <span class="eyebrow">Wir freuen uns auf Sie</span>
+        <h2 class="h2" id="reserve-title">Tisch reservieren</h2>
+        <p>Reservieren Sie über unser Anfrageformular oder telefonisch unter <a href={restaurant.phoneHref}>{restaurant.phoneDisplay}</a>.</p>
+        <p>Bitte haben Sie Verständnis, dass Reservierungen erst nach unserer Bestätigung gültig sind. Reservierungen für den gleichen Tag nehmen wir gerne telefonisch entgegen.</p>
+        <ContactList showEmail={false} />
+      </div>
+      <ReservationForm idPrefix="home" />
+    </div>
+  </section>
+
+  <section class="section" id="anfahrt" aria-labelledby="location-title">
+    <div class="container location">
+      <div>
+        <span class="eyebrow">So finden Sie uns</span>
+        <h2 class="h2" id="location-title" style="margin:12px 0 28px">Anfahrt &amp; Kontakt</h2>
+        <ContactList />
+        <div class="location-actions">
+          <a class="btn btn--solid" href={restaurant.directionsUrl} rel="noopener" target="_blank"><Icon name="route" /> Route planen<span class="visually-hidden"> (öffnet Google Maps in neuem Tab)</span></a>
+          <a class="btn" href="/so-finden-sie-uns/">Mehr zur Anfahrt</a>
+        </div>
+      </div>
+      <MapConsent />
+    </div>
+  </section>
+
+  <script>
+    import '../scripts/journey.js';
+  </script>
+</Base>

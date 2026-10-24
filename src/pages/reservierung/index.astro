@@ -1,0 +1,29 @@
+---
+import Base from '../../layouts/Base.astro';
+import ReservationForm from '../../components/ReservationForm.astro';
+import ContactList from '../../components/ContactList.astro';
+import { restaurant, reservation } from '../../content/site.js';
+---
+<Base
+  title="Kontakt & Reservierung | Steakhaus Nonnendamm"
+  description="Reservieren Sie Ihren Tisch im Steakhaus Nonnendamm per Anfrageformular oder telefonisch unter 030 382 50 23."
+  path="/reservierung/"
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Kontakt &amp; Reservierung</span>
+      <h1 class="display">Wir freuen uns auf Sie</h1>
+    </div>
+  </section>
+  <section class="section" style="padding-top:0">
+    <div class="container reserve">
+      <div class="reserve__intro">
+        <h2 class="h3" style="margin-bottom:16px">So reservieren Sie</h2>
+        <p>Reservieren Sie direkt über unser Anfrageformular oder telefonisch unter der Rufnummer <a href={restaurant.phoneHref}>{restaurant.phoneDisplay}</a>.</p>
+        <div class="notice"><p>{reservation.note}</p></div>
+        <ContactList />
+      </div>
+      <ReservationForm idPrefix="res" />
+    </div>
+  </section>
+</Base>

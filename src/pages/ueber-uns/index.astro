@@ -1,0 +1,53 @@
+---
+import Base from '../../layouts/Base.astro';
+import { restaurant, highlights } from '../../content/site.js';
+---
+<Base
+  title="Über uns | Steakhaus Nonnendamm – Ihr argentinisches Steakhaus"
+  description="Das Steakhaus Nonnendamm verbindet argentinische Grillkultur mit deutscher Gastfreundschaft, seit 1982 in Berlin-Siemensstadt."
+  path="/ueber-uns/"
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Über uns · Seit {restaurant.founded}</span>
+      <h1 class="display">Die Geschichte des Steakhauses Nonnendamm</h1>
+      <p class="lead">Willkommen im Steakhaus Nonnendamm, Ihrem argentinischen Steakhaus in Berlin-Siemensstadt.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="history">
+        <figure class="history__img" style="margin:0">
+          <img src="/img/gastraum.jpg" alt="Gastraum des Steakhaus Nonnendamm mit Holzbalken, Wagenrad und Salatbar" width="1366" height="786" />
+        </figure>
+        <div class="history__panel">
+          <span class="eyebrow">Argentinien trifft Berlin</span>
+          <h2 class="h2">Grillkultur und Gastfreundschaft</h2>
+          <p>Das Steakhaus Nonnendamm verbindet argentinische Grillkultur mit deutscher Gastfreundschaft. Seit {restaurant.founded} bedienen wir unsere Gäste mit Leidenschaft und Hingabe, um ein unvergessliches Geschmackserlebnis zu bieten.</p>
+          <p>Bei uns finden Sie Steaks, zubereitet auf traditionelle Weise am Holzkohlegrill und serviert in einem einladenden Ambiente.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container two-col">
+      <figure style="margin:0">
+        <img class="framed" src="/img/wagenrad-laternen.jpg" alt="Wagenrad mit Laternen und Weinflaschen im Steakhaus Nonnendamm" loading="lazy" width="1200" height="1200" />
+      </figure>
+      <div>
+        <span class="eyebrow">Besuchen Sie uns</span>
+        <h2 class="h2" style="margin:12px 0 20px">Ein Tisch am Feuer</h2>
+        <p class="lead">Lassen Sie sich von unserem kulinarischen Angebot begeistern. Besuchen Sie uns und reservieren Sie Ihren Tisch für ein unvergessliches Steak-Erlebnis.</p>
+        <ul class="tick-list" style="margin-top:24px">
+          {highlights.map((h) => <li><strong style="color:var(--ivory)">{h.title}:</strong> {h.text}</li>)}
+        </ul>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:28px">
+          <a class="btn btn--solid" href="/reservierung/">Jetzt reservieren <span class="arrow" aria-hidden="true"></span></a>
+          <a class="btn" href="/#gerichte">Unsere Gerichte</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,34 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactList from '../../components/ContactList.astro';
+import MapConsent from '../../components/MapConsent.astro';
+import Icon from '../../components/Icon.astro';
+import { restaurant } from '../../content/site.js';
+---
+<Base
+  title="So finden Sie uns | Steakhaus Nonnendamm"
+  description="Steakhaus Nonnendamm, Nonnendammallee 98, 13629 Berlin-Siemensstadt. Täglich 12 bis 24 Uhr geöffnet."
+  path="/so-finden-sie-uns/"
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Anfahrt</span>
+      <h1 class="display">So finden Sie uns</h1>
+      <p class="lead">{restaurant.street}, {restaurant.zip} {restaurant.city} ({restaurant.district})</p>
+    </div>
+  </section>
+  <section class="section" style="padding-top:0">
+    <div class="container location">
+      <div>
+        <h2 class="h3" style="margin-bottom:24px">{restaurant.legalName}</h2>
+        <ContactList />
+        <div class="location-actions">
+          <a class="btn btn--solid" href={restaurant.directionsUrl} rel="noopener" target="_blank"><Icon name="route" /> Route planen<span class="visually-hidden"> (öffnet Google Maps in neuem Tab)</span></a>
+          <a class="btn" href="/reservierung/">Tisch reservieren</a>
+        </div>
+        <img class="framed" src="/img/fassade.jpg" alt="Außenansicht des Steakhaus Nonnendamm bei Nacht" width="702" height="274" loading="lazy" style="margin-top:36px;width:100%" />
+      </div>
+      <MapConsent />
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,151 @@
+---
+import '../styles/global.css';
+import { nav, restaurant, thirdParty } from '../content/site.js';
+import Icon from '../components/Icon.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  cinematic?: boolean;
+}
+const { title, description, path, cinematic = false } = Astro.props;
+const isCurrent = (href: string) => href === path;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Restaurant',
+  name: restaurant.legalName,
+  servesCuisine: ['Argentinisch', 'Steakhaus'],
+  foundingDate: String(restaurant.founded),
+  telephone: restaurant.phoneIntl,
+  email: restaurant.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: restaurant.street,
+    postalCode: restaurant.zip,
+    addressLocality: restaurant.city,
+    addressCountry: 'DE',
+  },
+  openingHours: 'Mo-Su 12:00-24:00',
+  url: 'https://www.steakhaus-nonnendamm.de/',
+};
+---
+<!doctype html>
+<html lang="de" data-page={path}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#10100E" />
+    <link rel="icon" href="/brand/logo-steakhaus-nonnendamm.png" type="image/png" />
+    <link rel="canonical" href={`https://www.steakhaus-nonnendamm.de${path}`} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    {cinematic && (
+      <script is:inline>
+        // Entscheidet vor dem ersten Rendern, ob die Kamerafahrt laufen darf.
+        (function () {
+          var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          var c = navigator.connection || {};
+          var saver = c.saveData === true || /(^|-)2g$/.test(c.effectiveType || '');
+          var forced = /[?&]statisch\b/.test(location.search);
+          if (!reduce && !saver && !forced && 'IntersectionObserver' in window) {
+            document.documentElement.classList.add('is-cinematic');
+          }
+        })();
+      </script>
+    )}
+  </head>
+  <body>
+    <a class="skip-link" href="#inhalt">Zum Inhalt springen</a>
+    <header class="site-header" data-header>
+      <div class="container">
+        <a class="brand" href="/" aria-label="Steakhaus Nonnendamm, zur Startseite">
+          <img src="/brand/stier.png" alt="" width="46" height="30" />
+          <span class="brand-text"><small>Steakhaus</small><span>Nonnendamm</span></span>
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="hauptnavigation" data-nav-toggle>
+          <span class="bars" aria-hidden="true"></span> Menü
+        </button>
+        <nav class="site-nav" id="hauptnavigation" aria-label="Hauptnavigation" data-nav>
+          <ul class="nav-list">
+            {nav.map((item) => (
+              <li><a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a></li>
+            ))}
+          </ul>
+        </nav>
+        <a class="btn btn--solid header-cta" href="/reservierung/">Tisch reservieren</a>
+      </div>
+    </header>
+
+    <main id="inhalt" tabindex="-1">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <img class="footer-logo" src="/brand/logo-steakhaus-nonnendamm.png" alt="Logo Steakhaus Nonnendamm, Est. 1982" width="120" height="116" loading="lazy" />
+            <p>Argentinisches Steakhaus in Berlin-Siemensstadt. Steaks vom Holzkohlegrill, seit {restaurant.founded}.</p>
+          </div>
+          <div>
+            <h2>Besuchen Sie uns</h2>
+            <p>{restaurant.legalName}<br />{restaurant.street}<br />{restaurant.zip} {restaurant.city} ({restaurant.district})</p>
+            <p>{restaurant.hours}</p>
+          </div>
+          <div>
+            <h2>Kontakt</h2>
+            <ul>
+              <li><a href={restaurant.phoneHref}>Telefon {restaurant.phoneIntl}</a></li>
+              <li><a href={`mailto:${restaurant.email}`}>{restaurant.email}</a></li>
+              <li><a href={restaurant.directionsUrl} rel="noopener" target="_blank">Route planen<span class="visually-hidden"> (öffnet Google Maps in neuem Tab)</span></a></li>
+            </ul>
+          </div>
+          <div>
+            <h2>Seiten</h2>
+            <ul>
+              {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© {new Date().getFullYear()} Steakhaus Nonnendamm</span>
+          <span>
+            <a href="/impressum-datenschutz/">Impressum / Datenschutz</a>
+            &nbsp;·&nbsp;
+            <button type="button" class="linklike" data-consent-open>Datenschutzeinstellungen</button>
+          </span>
+        </div>
+      </div>
+    </footer>
+
+    <dialog class="consent-dialog" data-consent-dialog aria-labelledby="consent-title">
+      <form method="dialog">
+        <h2 id="consent-title">Datenschutzeinstellungen</h2>
+        <p>Diese Website lädt Inhalte von Drittanbietern nur nach Ihrer Zustimmung. Es werden keine Analyse- oder Werbedienste eingesetzt. Ihre Auswahl können Sie hier jederzeit ändern.</p>
+        {thirdParty.map((s) => (
+          <div class="consent-row">
+            <div>
+              <strong id={`consent-${s.id}-label`}>{s.name}</strong>
+              <small>Anbieter: {s.provider}. {s.purpose} {s.loads}</small>
+            </div>
+            <label class="check" style="margin-top:0">
+              <input type="checkbox" name={s.id} data-consent-toggle={s.id} aria-labelledby={`consent-${s.id}-label`} />
+              <span>Erlauben</span>
+            </label>
+          </div>
+        ))}
+        <p style="margin-top:16px"><a href="/impressum-datenschutz/#datenschutz">Mehr in der Datenschutzerklärung</a></p>
+        <div class="consent-actions">
+          <button class="btn btn--solid" value="save" data-consent-save>Auswahl speichern</button>
+          <button class="btn" value="reject" data-consent-reject>Alle ablehnen</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script>
+      import '../scripts/site.js';
+    </script>
+  </body>
+</html>

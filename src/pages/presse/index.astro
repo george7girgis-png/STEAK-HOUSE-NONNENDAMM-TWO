@@ -1,0 +1,46 @@
+---
+import Base from '../../layouts/Base.astro';
+import { press, pressArchiveNote } from '../../content/site.js';
+---
+<Base
+  title="Presse | Steakhaus Nonnendamm"
+  description="Presse-Archiv des Steakhaus Nonnendamm: Parknews 2009, BZ Berlin 2012 und Groupon 2013."
+  path="/presse/"
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Archiv</span>
+      <h1 class="display">Presse</h1>
+      <p class="lead">Berichte über das Steakhaus Nonnendamm aus den Jahren 2009 bis 2013.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <figure style="margin:0 0 48px">
+        <img class="framed" src="/img/fassade.jpg" alt="Außenansicht des Steakhaus Nonnendamm bei Nacht mit beleuchtetem Schriftzug" width="702" height="274" style="width:100%" />
+      </figure>
+      <div class="notice">
+        <p>{pressArchiveNote}</p>
+        <p>Die Zusammenfassungen sind eigene Kurztexte. Die vollständigen Originalartikel liegen den jeweiligen Verlagen vor.</p>
+      </div>
+      {press.map((p) => (
+        <article class="press-article" id={p.id} aria-labelledby={`${p.id}-title`}>
+          <div>
+            <div class="source">{p.source}</div>
+            <div class="date">{p.date}</div>
+            {p.author && <div class="date" style="margin-top:2px">von {p.author}</div>}
+          </div>
+          <div class="prose">
+            <h2 id={`${p.id}-title`} style="margin-top:0">„{p.title}“</h2>
+            <p>{p.summary}</p>
+            <p class="media-note">Quelle: {p.source}{p.author && `, ${p.author}`}, {p.date}. Archivmaterial, Angaben entsprechen dem damaligen Stand.</p>
+          </div>
+        </article>
+      ))}
+      <div style="text-align:center;margin-top:40px">
+        <a class="btn btn--solid" href="/reservierung/">Jetzt reservieren <span class="arrow" aria-hidden="true"></span></a>
+      </div>
+    </div>
+  </section>
+</Base>

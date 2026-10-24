@@ -1,0 +1,14 @@
+---
+import { restaurant } from '../content/site.js';
+---
+<div class="map-box" data-map data-src={restaurant.mapEmbedUrl}>
+  <div class="map-consent" data-map-placeholder>
+    <p class="eyebrow">Karte</p>
+    <p>Zum Anzeigen der Karte wird Google Maps geladen. Dabei werden Daten (u. a. Ihre IP-Adresse) an Google übermittelt. Ohne Ihre Zustimmung wird nichts geladen.</p>
+    <div class="btns">
+      <button type="button" class="btn btn--solid" data-map-load>Karte laden</button>
+      <a class="btn" href={restaurant.directionsUrl} rel="noopener" target="_blank">Route planen<span class="visually-hidden"> (öffnet Google Maps in neuem Tab)</span></a>
+    </div>
+    <label class="check"><input type="checkbox" data-map-remember /> Google Maps künftig automatisch laden</label>
+  </div>
+</div>

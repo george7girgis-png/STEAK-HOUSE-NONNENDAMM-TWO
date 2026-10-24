@@ -1,0 +1,12 @@
+---
+import Icon from './Icon.astro';
+import { restaurant } from '../content/site.js';
+interface Props { showEmail?: boolean }
+const { showEmail = true } = Astro.props;
+---
+<ul class="contact-list">
+  <li><Icon name="pin" /><div><strong>Adresse</strong>{restaurant.legalName}<br />{restaurant.street}<br />{restaurant.zip} {restaurant.city} ({restaurant.district})</div></li>
+  <li><Icon name="clock" /><div><strong>Öffnungszeiten</strong>{restaurant.hours}</div></li>
+  <li><Icon name="phone" /><div><strong>Telefon</strong><a href={restaurant.phoneHref}>{restaurant.phoneIntl}</a></div></li>
+  {showEmail && <li><Icon name="mail" /><div><strong>E-Mail</strong><a href={`mailto:${restaurant.email}`}>{restaurant.email}</a></div></li>}
+</ul>

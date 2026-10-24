@@ -1,0 +1,65 @@
+---
+import { restaurant, reservation } from '../content/site.js';
+interface Props { idPrefix?: string }
+const { idPrefix = 'res' } = Astro.props;
+const fields = [
+  { name: 'name', label: 'Name', type: 'text', autocomplete: 'name', full: true },
+  { name: 'email', label: 'E-Mail', type: 'email', autocomplete: 'email' },
+  { name: 'telefon', label: 'Rückrufnummer', type: 'tel', autocomplete: 'tel' },
+  { name: 'datum', label: 'Datum', type: 'date' },
+  { name: 'uhrzeit', label: 'Uhrzeit', type: 'time', min: reservation.openFrom, max: reservation.openUntil, step: 900 },
+  { name: 'personen', label: 'Anzahl Personen', type: 'number', min: 1, inputmode: 'numeric' },
+];
+const id = (n: string) => `${idPrefix}-${n}`;
+---
+<form
+  class="form"
+  novalidate
+  data-reservation
+  data-endpoint={reservation.endpoint ?? ''}
+  data-email={restaurant.email}
+  data-phone={restaurant.phoneIntl}
+  aria-labelledby={id('title')}
+>
+  <h3 class="h3" id={id('title')} style="margin-bottom:18px">Reservierungsanfrage</h3>
+  <div class="form-summary" role="alert" tabindex="-1" data-summary>
+    <strong>Bitte prüfen Sie Ihre Angaben:</strong>
+    <ul data-summary-list></ul>
+  </div>
+  <div class="form-grid">
+    {fields.map((f) => (
+      <div class={`field${f.full ? ' full' : ''}`}>
+        <label for={id(f.name)}>{f.label}<span class="req" aria-hidden="true">*</span></label>
+        <input
+          id={id(f.name)}
+          name={f.name}
+          type={f.type}
+          required
+          aria-required="true"
+          aria-describedby={id(`${f.name}-error`)}
+          autocomplete={f.autocomplete}
+          min={f.min}
+          max={f.max}
+          step={f.step}
+          inputmode={f.inputmode}
+        />
+        <span class="error" id={id(`${f.name}-error`)} data-error-for={f.name}></span>
+      </div>
+    ))}
+  </div>
+  <p class="form-legend"><span aria-hidden="true" style="color:var(--ember)">*</span> Kennzeichnet erforderliche Felder</p>
+  <div class="form-actions">
+    <button type="submit" class="btn btn--solid">Reservierungsanfrage senden <span class="arrow" aria-hidden="true"></span></button>
+    <a class="btn" href={restaurant.phoneHref}>Anrufen: {restaurant.phoneDisplay}</a>
+  </div>
+  {reservation.endpoint ? (
+    <p class="form-hint">Ihre Anfrage wird an das Restaurant übermittelt. Sie ist erst nach unserer Bestätigung gültig.</p>
+  ) : (
+    <p class="form-hint">
+      Ihre Anfrage wird als E-Mail an {restaurant.email} vorbereitet und erst mit dem Absenden in Ihrem E-Mail-Programm verschickt.
+      Sie ist erst nach unserer Bestätigung gültig.
+      {reservation.legacyUrl && (<> Alternativ: <a href={reservation.legacyUrl}>bisheriges Reservierungsformular</a>.</>)}
+    </p>
+  )}
+  <div class="form-status" role="status" aria-live="polite" tabindex="-1" data-status></div>
+</form>
