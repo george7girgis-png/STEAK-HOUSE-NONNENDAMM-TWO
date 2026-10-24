@@ -11,6 +11,8 @@ interface Props {
 }
 const { title, description, path, cinematic = false } = Astro.props;
 const isCurrent = (href: string) => href === path;
+// Vorschau-Builds bleiben aus Suchmaschinen raus. Beim Launch PUBLIC_INDEXABLE=true setzen.
+const indexable = import.meta.env.PUBLIC_INDEXABLE === 'true';
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Restaurant',
@@ -38,6 +40,7 @@ const jsonLd = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="theme-color" content="#10100E" />
+    {!indexable && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" href="/brand/logo-steakhaus-nonnendamm.png" type="image/png" />
     <link rel="canonical" href={`https://www.steakhaus-nonnendamm.de${path}`} />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
